@@ -1,5 +1,5 @@
 const express = require("express");
-const conn = require("./connection");
+const conn = require("./utils");
 const app = new express();
 
 app.use(express.urlencoded({extended: true}));
