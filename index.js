@@ -9,9 +9,13 @@ app.use(express.urlencoded({extended: true}));
 
 // ROUTES
 app.use("/api/admin/kategori", admin_kategori);
+<<<<<<< Updated upstream
 app.use("/api/admin/hashtag", admin_hashtag);
 app.use("/api/user", auth)
 
+=======
+app.use("/api/user", auth);
+>>>>>>> Stashed changes
 
 // -
 
