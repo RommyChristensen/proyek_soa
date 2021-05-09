@@ -1,11 +1,12 @@
 const express = require("express");
-const utils = require("./utils");
+const utils = require("./helpers/utils");
+const auth = require("./routes/user/auth");
 const app = new express();
 
 app.use(express.urlencoded({extended: true}));
 
 // ROUTES
-
+app.use("/api/user", auth)
 
 
 // -
