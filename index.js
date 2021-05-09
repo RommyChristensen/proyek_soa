@@ -10,7 +10,7 @@ app.use(express.urlencoded({extended: true}));
 // ROUTES
 app.use("/api/admin/kategori", admin_kategori);
 app.use("/api/admin/hashtag", admin_hashtag);
-app.use("/api/user", auth)
+app.use("/api/user", auth);
 
 
 // -

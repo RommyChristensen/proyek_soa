@@ -47,11 +47,4 @@ const deleteData = async (kategori_id) => {
     return result;
 }
 
-const ifExists = async (table, column, value) => {
-    const conn = await getConnection();
-    const result = await executeQuery(conn, `SELECT COUNT(*) AS count FROM ${table} WHERE ${column} = '${value}'`);
-    if(parseInt(result[0].count) == 0) return false;
-    else return true;
-}
-
-module.exports = { insertData, getData, getDataById, updateData, deleteData, ifExists };
+module.exports = { insertData, getData, getDataById, updateData, deleteData };

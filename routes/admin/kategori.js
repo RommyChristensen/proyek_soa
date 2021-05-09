@@ -1,5 +1,6 @@
 const express = require("express");
 const kategori_model = require('../../models/admin/kategoris');
+const { ifExists } = require("../../helpers/utils");
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -8,7 +9,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:kategori_id', async (req, res) => {
-    if(! await kategori_model.ifExists("kategoris", "kategori_id", kategori_id)){
+    if(! await ifExists("kategoris", "kategori_id", kategori_id)){
         return res.status(404).send({error: "Kategori not found"});
     }
 
@@ -22,7 +23,7 @@ router.post('/', async (req, res) => {
         kategori_nama : nama
     };
 
-    if(await kategori_model.ifExists("kategoris", "kategori_nama", nama)){
+    if(await ifExists("kategoris", "kategori_nama", nama)){
         return res.status(500).send({error: "Duplicate names"});
     }
 
@@ -36,11 +37,11 @@ router.post('/', async (req, res) => {
 router.put('/:kategori_id', async (req, res) => {
     const { kategori_id } = req.params;
     const { nama } = req.body;
-    if(! await kategori_model.ifExists("kategoris", "kategori_id", kategori_id)){
+    if(! await ifExists("kategoris", "kategori_id", kategori_id)){
         return res.status(404).send({error: "Kategori not found"});
     }
 
-    if(await kategori_model.ifExists("kategoris", "kategori_nama", nama)){
+    if(await ifExists("kategoris", "kategori_nama", nama)){
         return res.status(500).send({error: "Duplicate names"});
     }
 
@@ -50,11 +51,11 @@ router.put('/:kategori_id', async (req, res) => {
 
 router.delete('/:kategori_id', async (req, res) => {
     const { kategori_id } = req.params;
-    if(! await kategori_model.ifExists("kategoris", "kategori_id", kategori_id)){
+    if(! await ifExists("kategoris", "kategori_id", kategori_id)){
         return res.status(404).send({error: "Kategori not found"});
     }
 
-    if( await kategori_model.ifExists("artikels", "kategori_id", kategori_id)){
+    if( await ifExists("artikels", "kategori_id", kategori_id)){
         return res.status(500).send({error: "Kategori used by some articles"});
     }
 
