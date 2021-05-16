@@ -14,6 +14,7 @@ const insertData = async (data) => {
         conn.release();
         return null;
     }
+    
 };
 
 const getData = async () => {

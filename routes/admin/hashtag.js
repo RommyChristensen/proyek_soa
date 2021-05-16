@@ -24,6 +24,7 @@ router.post('/', async (req, res) => {
     if(await ifExists("hashtags", "hashtag_nama", nama)){
         return res.status(400).send({error: "Hashtag has been registered"});
     }
+
     const hashtag_id=await hashtag_model.insertData(data);
     if(hashtag_id!=null){
         let datareturn = {

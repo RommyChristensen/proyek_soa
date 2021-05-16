@@ -10,7 +10,7 @@ router.post("/register", async (req, res) => {
     if(! await auth_model.checkUnique("users", "user_username", username)){
         return res.status(400).send({error: "Username not unique"});
     }
-
+    
     if(! await auth_model.checkUnique("users", "user_email", email)){
         return res.status(400).send({error: "Email not unique"});
     }
