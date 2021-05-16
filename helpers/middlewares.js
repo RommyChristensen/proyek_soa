@@ -6,9 +6,14 @@ const checkAuthUser = async (req, res, next) => {
         return res.status(401).send({error: "Unauthorized User"});
     }
 
-    const user = jwt.verify(req.header('X-AUTH-TOKEN'), process.env.secret);
-    req.body.user = user;
-    next();
+    try{
+        const user = jwt.verify(req.header('X-AUTH-TOKEN'), process.env.secret);
+        req.body.user = user;
+        next();
+    }catch(ex){
+        return res.status(400).send({error: "Invalid Signature"});
+    }
+    
 }
 
 module.exports = {checkAuthUser};
