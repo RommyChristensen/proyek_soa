@@ -1,6 +1,7 @@
 const express = require('express');
 // const utils = require("../../helpers/user_utils");
 const auth_model = require('../../models/user/auth');
+const middlewares = require('../../helpers/middlewares');
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
@@ -32,6 +33,25 @@ router.post("/register", async (req, res) => {
         return res.status(500).send({error: "Something went wrong"});
     }
 });
+
+router.post('/login', async (req, res) => {
+
+    const { username, password } = req.body;
+    const data = {
+        user_username : username,
+        user_password : password,
+    }
+
+    const user = await auth_model.checkUsernamePassword(data);
+
+    if(!user){
+        return res.status(404).send({error: "Username / Password Salah"});
+    }
+
+    return res.status(200).send({
+        token: user
+    });
+})
 
 module.exports = router;
 

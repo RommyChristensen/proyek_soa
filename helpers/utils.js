@@ -1,4 +1,6 @@
 const { pool } = require('../connection');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 function getConnection() {
     return new Promise(function (resolve, reject) {
@@ -40,4 +42,9 @@ const ifExists = async (table, column, value) => {
     else return true;
 }
 
-module.exports = { getConnection, executeQuery, generateId, ifExists };
+const generateJWT = async (data) => {
+    const data_user = jwt.sign(data, process.env.secret, {expiresIn: "45m"});
+    return data_user;
+}
+
+module.exports = { getConnection, executeQuery, generateId, ifExists, generateJWT };
