@@ -3,6 +3,19 @@ const plan_model = require('../../models/admin/plans');
 const { ifExists } = require("../../helpers/utils");
 const router = express.Router();
 
+router.get('/subscriber/', async (req, res) => {
+    const result = await plan_model.getSubscriber();
+    return res.status(200).send(result);
+});
+
+router.get('/subscriber/:plan_id', async (req, res) => {
+    if(! await ifExists("plans", "plan_id", req.params.plan_id)){
+        return res.status(404).send({error: "plan not found"});
+    }
+    const result = await plan_model.getSubscriberById(req.params.plan_id);
+    return res.status(200).send(result);
+});
+
 router.get('/', async (req, res) => {
     const result = await plan_model.getData();
     return res.status(200).send(result);
@@ -52,5 +65,6 @@ router.put('/:plan_id', async (req, res) => {
     const result = await plan_model.updateData(plan_id, deskripsi,harga);
     return res.status(200).send(result);
 });
+
 
 module.exports = router;
