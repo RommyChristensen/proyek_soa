@@ -9,8 +9,9 @@ const getDataById = async (artikel_id,user_id) => {
 
 const insertData = async (data) => {
     const comments_id = await generateId("comments", "comment_id", "C");
-    const comments_isi = data.comments_isi;
+    const comments_isi = data.comment_isi;
     const user_id = data.user_id;
+    const artikel_id = data.artikel_id;
 
     const conn = await getConnection();
 
@@ -19,9 +20,19 @@ const insertData = async (data) => {
         conn.release();
         return comments_id;
     }catch(ex){
+        //console.log(ex);
         conn.release();
         return null;
     } 
 };
 
-module.exports = { getDataById ,insertData }
+const deleteData = async (comment_id) => {
+    const conn = await getConnection();
+    const result = await executeQuery(conn, `DELETE FROM comments WHERE comment_id = '${comment_id}'`);
+    conn.release();
+    return result;
+}
+
+
+
+module.exports = { getDataById ,insertData, deleteData}

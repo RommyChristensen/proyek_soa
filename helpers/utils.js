@@ -38,6 +38,7 @@ const ifExists = async (table, column, value) => {
     const conn = await getConnection();
     const result = await executeQuery(conn, `SELECT COUNT(*) AS count FROM ${table} WHERE ${column} = '${value}'`);
     conn.release();
+    console.log(result[0].count);
     if(parseInt(result[0].count) == 0) return false;
     else return true;
 }
