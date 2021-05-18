@@ -14,6 +14,7 @@ const insertData = async (data) => {
             return null;
         }
     }
+
     try{
         await executeQuery(conn, `INSERT INTO artikels VALUES('${artikel_id}', '${data.kategori_id}','${data.user_id}',
                             '${data.artikel_judul}','${data.artikel_isi}',now(),'${data.artikel_foto}')`);

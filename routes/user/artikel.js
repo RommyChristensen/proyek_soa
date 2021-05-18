@@ -89,6 +89,7 @@ router.post('/',uploads.single('artikel_foto'),middleware.checkAuthArtikelUser, 
             }
         }
     }
+    
     if(!await ifExists("kategoris", "kategori_id", kategori_id)){
         try{
             fs.unlinkSync(`./uploads/`+foto_id+".jpeg");
