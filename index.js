@@ -7,6 +7,7 @@ const admin_plan = require("./routes/admin/plan");
 const admin_user = require("./routes/admin/user");
 
 const user_comments = require("./routes/user/comments");
+const user_artikel = require("./routes/user/artikel");
 
 const app = new express();
 
@@ -20,6 +21,7 @@ app.use("/api/admin/user", admin_user);
 app.use("/api/user", auth);
 
 app.use("/api/user/comments", user_comments);
+app.use("/api/user/artikel", user_artikel);
 
 // -
 
