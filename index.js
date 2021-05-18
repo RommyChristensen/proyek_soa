@@ -12,9 +12,13 @@ const user_artikel = require("./routes/user/artikel");
 const user_headlines = require("./routes/user/headline");
 const user_likes = require("./routes/user/likes");
 
+const dev_subscribe = require('./routes/dev/subscribe');
+const dev_payment = require('./routes/dev/payment');
+
 const app = new express();
 
 app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 // ROUTES
 app.use("/api/admin/kategori", admin_kategori);
@@ -26,7 +30,13 @@ app.use("/api/admin/artikel", admin_artikel);
 app.use("/api/user/comments", user_comments);
 app.use("/api/user/artikel", user_artikel);
 app.use("/api/user/headlines", user_headlines);
+<<<<<<< Updated upstream
 app.use("/api/user/like", user_likes);
+=======
+
+app.use("/api/dev/subscribe", dev_subscribe);
+app.use("/api/dev/pay", dev_payment);
+>>>>>>> Stashed changes
 // -
 
 

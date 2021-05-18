@@ -1,5 +1,6 @@
 const { pool } = require('../connection');
 const jwt = require('jsonwebtoken');
+const { randomBytes } = require('crypto');
 require('dotenv').config()
 
 function getConnection() {
@@ -34,6 +35,10 @@ const generateId = async (table, column, prefix) => {
     return prefix + (count + "").padStart(4, "0");
 }
 
+const generateApiKey = () => {
+    return randomBytes(8).toString('hex');
+}
+
 const ifExists = async (table, column, value) => {
     const conn = await getConnection();
     const result = await executeQuery(conn, `SELECT COUNT(*) AS count FROM ${table} WHERE ${column} = '${value}'`);
@@ -47,4 +52,4 @@ const generateJWT = async (data) => {
     return data_user;
 }
 
-module.exports = { getConnection, executeQuery, generateId, ifExists, generateJWT };
+module.exports = { getConnection, executeQuery, generateId, ifExists, generateJWT, generateApiKey };

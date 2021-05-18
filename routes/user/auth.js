@@ -56,6 +56,7 @@ router.post('/login', async (req, res) => {
 router.put('/profile/:username', middlewares.checkAuthUser, async (req, res) => {
     const {user} = req.body;
 
+    // nama, username
     let data = {}
     for (const [key, value] of Object.entries(req.body)) {
         if(key != 'user'){
