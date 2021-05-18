@@ -46,6 +46,40 @@ const checkUsernamePassword = async (data) => {
     }
 }
 
+const updateProfile = async (username, data) => {
+    const conn = await getConnection();
+    let set = "SET ";
+    let selectField = "";
+    let i = 0;
+    for (const [key, value] of Object.entries(data)) {
+        if(i != 0){
+            set += ", ";
+            selectField += ", ";
+        }
+        set += key + " = '" + value + "'";
+        selectField += key;
+        i++;
+    }
+    
+    try{
+        let user_lama = await executeQuery(conn, `SELECT ${selectField} FROM users WHERE user_username = '${username}'`);
+        await executeQuery(conn, `UPDATE users ${set} WHERE user_username = '${username}'`);
 
-module.exports = { checkUnique, insert, checkUsernamePassword }
+        let returnData = {};
+        for (const [key, value] of Object.entries(user_lama[0])) {
+            returnData[key + "_lama"] = value;
+        }
+
+        for (const [key, value] of Object.entries(data)) {
+            returnData[key + "_baru"] = value;
+        }
+        conn.release();
+        return returnData;
+    }catch(ex){
+        conn.release();
+        return false;
+    }
+}
+
+module.exports = { checkUnique, insert, checkUsernamePassword, updateProfile }
 

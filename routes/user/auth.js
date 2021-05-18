@@ -53,7 +53,24 @@ router.post('/login', async (req, res) => {
     });
 })
 
+router.put('/profile/:username', middlewares.checkAuthUser, async (req, res) => {
+    const {user} = req.body;
 
+    let data = {}
+    for (const [key, value] of Object.entries(req.body)) {
+        if(key != 'user'){
+            data["user_" + key] = value;
+        }
+    }
+
+    let result = await auth_model.updateProfile(user.user_username, data);
+
+    if(!result){
+        return res.status(400).send({error: "Ada yang salah"});
+    }
+
+    return res.status(200).send(result);
+})
 
 module.exports = router;
 
