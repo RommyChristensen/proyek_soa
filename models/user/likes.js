@@ -20,6 +20,7 @@ const likeArtikel = async (user_id,artikel_id) => {
     } 
 };
 
+
 const unlikeArtikel = async (user_id,artikel_id) => {
     const conn = await getConnection();
     const result = await executeQuery(conn, `DELETE FROM likes WHERE user_id = '${user_id}' AND artikel_id = '${artikel_id}'`);
