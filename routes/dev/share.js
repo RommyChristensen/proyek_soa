@@ -4,9 +4,9 @@ const { ifExists } = require("../../helpers/utils");
 const middleware = require('../../helpers/middlewares');
 const router = express.Router();
 
-router.post('/fb',middleware.checkAuthUser , async (req, res) => {
+router.post('/fb',middleware.checkApiKeyDev, async (req, res) => {
 
-    const access_token = req.body.artikel_id;
+    const access_token = req.body.access_token;
     const app_id = req.body.app_id;
     const artikel_id= req.body.artikel_id;
 
@@ -15,7 +15,7 @@ router.post('/fb',middleware.checkAuthUser , async (req, res) => {
     }
 
     var result = await share_model.shareFacebook(access_token,app_id,artikel_id);
-    return res.status(200).send(result);
+    return res.status(200).send({message: "Success share fb"});
     
 });
 
