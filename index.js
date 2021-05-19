@@ -16,7 +16,7 @@ const dev_subscribe = require("./routes/dev/subscribe");
 const dev_payment = require("./routes/dev/payment");
 const dev_headline = require("./routes/dev/headline");
 const dev_share = require("./routes/dev/share");
-const dev_get_api_key = require("./routes/dev/dev");
+const dev_get_api_key = require("./routes/dev/apikey");
 const dev_plan = require("./routes/dev/plan");
 
 const app = new express();
