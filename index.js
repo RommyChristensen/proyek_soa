@@ -14,6 +14,7 @@ const user_likes = require("./routes/user/likes");
 
 const dev_subscribe = require("./routes/dev/subscribe");
 const dev_payment = require("./routes/dev/payment");
+const dev_share = require("./routes/dev/share");
 
 const app = new express();
 
@@ -34,6 +35,8 @@ app.use("/api/user/like", user_likes);
 
 app.use("/api/dev/subscribe", dev_subscribe);
 app.use("/api/dev/pay", dev_payment);
+app.use("/api/dev/share", dev_share);
+
 // -
 
 const port = process.env.PORT || 3000;
