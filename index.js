@@ -17,6 +17,7 @@ const dev_payment = require("./routes/dev/payment");
 const dev_headline = require("./routes/dev/headline");
 const dev_share = require("./routes/dev/share");
 const dev_get_api_key = require("./routes/dev/dev");
+const dev_plan = require("./routes/dev/plan");
 
 const app = new express();
 
@@ -41,6 +42,7 @@ app.use("/api/dev/pay", dev_payment);
 app.use("/api/dev/headlines", dev_headline);
 app.use("/api/dev/share", dev_share);
 app.use("/api/dev/apikey", dev_get_api_key);
+app.use("/api/dev/plan", dev_plan);
 // -
 
 const port = process.env.PORT || 3000;
