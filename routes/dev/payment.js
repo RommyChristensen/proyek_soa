@@ -20,7 +20,20 @@ router.post('/bank', middleware.checkAuthUser, async (req, res) => {
 });
 
 router.post('/cc', middleware.checkAuthUser, async (req, res) => {
+    const card = {
+        card_number: req.body.card_number,
+        card_exp_month: req.body.card_exp_month,
+        card_exp_year: req.body.card_exp_year,
+        card_cvv: req.body.card_cvv
+    }
+    const {subscribe_id} = req.body;
+    let result = await payment_model.requestPaymentCC(card, subscribe_id);
 
+    if(result.code == 200){
+        return res.status(result.code).send(result);
+    }
+
+    return res.status(result.code).send({error: result.msg});
 });
 
 router.post('/payment_notification', async (req, res) => {

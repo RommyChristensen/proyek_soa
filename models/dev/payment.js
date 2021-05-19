@@ -26,9 +26,6 @@ const requestPaymentBT = async (data) => {
     let update = await executeQuery(conn, `UPDATE subscribes SET order_id = '${order_id}', order_status = '${chargeResponse.transaction_status}' WHERE subscribe_id = '${data.subscribe_id}'`)
 
     return chargeResponse;
-    // return res.status(200).send({
-    //     "msg": `mohon transfer ke : ${chargeResponse.va_numbers[0].va_number}`
-    // });
 }
 
 const completePaymentBT = async (order_id, order_status) => {
@@ -45,8 +42,52 @@ const completePaymentBT = async (order_id, order_status) => {
     }
 }
 
-const requestPaymentCC = async () => {
+const requestPaymentCC = async (card, subscribe_id) => {
+    card.client_key = midtransCore.apiConfig.clientKey;
+    
+    try{
+           
+    }catch(ex){
+        console.log(ex);
+    }
 
+    const cardToken = await midtransCore.cardToken(card);
+    const conn = await getConnection();
+    let result = await executeQuery(conn, `SELECT * FROM subscribes WHERE subscribe_id = '${subscribe_id}'`);
+    if(result.length == 0){
+        return 404;
+    }
+
+    const parameter = {
+        "payment_type": "credit_card",
+        "transaction_details": {
+            "gross_amount": result[0].subscribe_jumlah_bayar,
+            "order_id": "t" + new Date().getTime(),
+        },
+        "credit_card":{
+            "token_id": cardToken.token_id
+        }
+    };
+        
+    const chargeResponse = await midtransCore.charge(parameter);
+    console.log(chargeResponse);
+    if(chargeResponse.fraud_status == "accept"){
+        const api_key = generateApiKey();
+        let hasil = await executeQuery(conn, `UPDATE subscribes SET order_status = '${chargeResponse.channel_response_message}', subscribe_tanggal_pembayaran = now(), order_id = '${chargeResponse.order_id}', subscribe_api_key = '${api_key}' WHERE subscribe_id = '${subscribe_id}'`);
+        conn.release();
+        return {
+            code: 200,
+            msg: "Sukses", 
+            api_key: api_key
+        }
+    }
+    else{
+        conn.release();
+        return {
+            code: 400,
+            msg: "Pembayaran Gagal"
+        };
+    }
 }
 
 const checkSubscription = async (subscribe_id) => {
