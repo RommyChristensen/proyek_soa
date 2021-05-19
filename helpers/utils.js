@@ -54,11 +54,21 @@ const generateJWT = async (data) => {
 
 const checkApiKey = async apiKey => {
     const conn = await getConnection();
-    const result = await executeQuery(conn, `SELECT u.* FROM subscribes s JOIN users u ON u.user_id = s.user_id WHERE s.subscribe_api_key = '${apiKey}' AND s.subscribe_api_key <> NULL`);
+    const result = await executeQuery(conn, `SELECT u.* FROM subscribes s JOIN users u ON u.user_id = s.user_id WHERE s.subscribe_api_key = '${apiKey}' AND s.subscribe_tanggal_pembayaran IS NOT NULL`);
     conn.release();
     if(result.length == 0){
-        return false;
+        return {
+            code: 404,
+            msg: "Invalid API KEY"
+        };
     }
+    if(result[0].subscribe_api_hit <= 0){
+        return {
+            code: 400,
+            msg: "Api Hit tidak mencukupi"
+        }
+    }
+    await executeQuery(conn, `UPDATE subscribes SET subscribe_api_hit = subscribe_api_hit - 1 WHERE subscribe_api_key = '${apiKey}'`);
     return result[0];
 }
 

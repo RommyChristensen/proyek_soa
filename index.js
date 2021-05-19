@@ -39,7 +39,6 @@ app.use("/api/dev/subscribe", dev_subscribe);
 app.use("/api/dev/pay", dev_payment);
 app.use("/api/dev/headlines", dev_headline);
 app.use("/api/dev/share", dev_share);
-
 // -
 
 const port = process.env.PORT || 3000;
