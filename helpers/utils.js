@@ -52,4 +52,14 @@ const generateJWT = async (data) => {
     return data_user;
 }
 
-module.exports = { getConnection, executeQuery, generateId, ifExists, generateJWT, generateApiKey };
+const checkApiKey = async apiKey => {
+    const conn = await getConnection();
+    const result = await executeQuery(conn, `SELECT u.* FROM subscribes s JOIN users u ON u.user_id = s.user_id WHERE s.subscribe_api_key = '${apiKey}' AND s.subscribe_api_key <> NULL`);
+    conn.release();
+    if(result.length == 0){
+        return false;
+    }
+    return result[0];
+}
+
+module.exports = { getConnection, executeQuery, generateId, ifExists, generateJWT, generateApiKey, checkApiKey };
