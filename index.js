@@ -12,12 +12,12 @@ const user_artikel = require("./routes/user/artikel");
 const user_headlines = require("./routes/user/headline");
 const user_likes = require("./routes/user/likes");
 
-const dev_subscribe = require('./routes/dev/subscribe');
-const dev_payment = require('./routes/dev/payment');
+const dev_subscribe = require("./routes/dev/subscribe");
+const dev_payment = require("./routes/dev/payment");
 
 const app = new express();
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // ROUTES
@@ -37,8 +37,7 @@ app.use("/api/dev/subscribe", dev_subscribe);
 app.use("/api/dev/pay", dev_payment);
 // -
 
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log("Listening to " + port);
-})
+  console.log("Listening to " + port);
+});
