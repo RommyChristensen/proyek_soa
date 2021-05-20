@@ -1,8 +1,8 @@
 const fs = require('fs')
 const express = require("express");
 const multer  = require('multer');
-const artikel_model = require('../../models/user/artikels');
-const hashtag_model = require('../../models/user/hashtags');
+const artikel_model = require('../../models/dev/artikels');
+const hashtag_model = require('../../models/dev/hashtags');
 const middleware = require('../../helpers/middlewares');
 const { ifExists,generateId } = require("../../helpers/utils");
 const router = express.Router();
@@ -56,7 +56,7 @@ var uploadsupd=multer({
     }
 });
 
-router.post('/',uploads.single('artikel_foto'),middleware.checkAuthArtikelUser, async (req, res) => {
+router.post('/',uploads.single('artikel_foto'),middleware.checkApiKeyDevArtikel, async (req, res) => {
     let kategori_id = req.body.kategori_id;
     let artikel_judul = req.body.artikel_judul;
     let artikel_isi = req.body.artikel_isi;
@@ -64,7 +64,7 @@ router.post('/',uploads.single('artikel_foto'),middleware.checkAuthArtikelUser, 
     let hashtag=[];
     let foto_id = await generateId("artikels", "artikel_id", "A");
     let user_id='';
-    if(!(req.body.user=='invalid' || req.body.user=='unauthorized')){
+    if(!(req.body.user=='invalid' || req.body.user=='unauthorized' || req.body.user=='notfound' || req.body.user=='notenough')){
         user_id=req.body.user.user_id;
     }
     else{
@@ -90,6 +90,12 @@ router.post('/',uploads.single('artikel_foto'),middleware.checkAuthArtikelUser, 
         }
         else if(req.body.user=='invalid'){
             return res.status(401).send({error: "Invalid Signature"});
+        }
+        if(req.body.user=='notfound'){
+            return res.status(404).send({error: "API KEY Not Found"});
+        }
+        else if(req.body.user=='notenough'){
+            return res.status(400).send({error: "Your API Hit is empty"});
         }
     }
 
@@ -157,7 +163,7 @@ router.post('/',uploads.single('artikel_foto'),middleware.checkAuthArtikelUser, 
     }
 });
 
-router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkAuthArtikelUser, async (req, res) => {
+router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkApiKeyDevArtikel, async (req, res) => {
     let artikel_id = req.params.artikel_id;
     let foto_id = artikel_id;
 
@@ -167,7 +173,7 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkAuth
     let artikel_foto='';
 
     let user_id='';
-    if(!(req.body.user=='invalid' || req.body.user=='unauthorized')){
+    if(!(req.body.user=='invalid' || req.body.user=='unauthorized' || req.body.user=='notfound' || req.body.user=='notenough')){
         user_id=req.body.user.user_id;
     }
     else{
@@ -193,6 +199,12 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkAuth
         }
         else if(req.body.user=='invalid'){
             return res.status(401).send({error: "Invalid Signature"});
+        }
+        if(req.body.user=='notfound'){
+            return res.status(404).send({error: "API KEY Not Found"});
+        }
+        else if(req.body.user=='notenough'){
+            return res.status(400).send({error: "Your API Hit is empty"});
         }
     }
 
@@ -313,61 +325,6 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkAuth
         return res.status(500).send({error: "Something went wrong"});
     }
 
-    return res.status(200).send(result);
-});
-
-router.delete('/:artikel_id',middleware.checkAuthArtikelUser, async (req, res) => {
-    let artikel_id=req.params.artikel_id;
-    let user_id='';
-    if(req.body.user!='invalid'){
-        user_id=req.body.user.user_id;
-    }
-    else{
-        //user blm login atau token tidak sesuai 
-        return res.status(401).send({error: "Invalid Signature"});
-    }
-
-    //cek artikel ada ga
-    if(!await ifExists("artikels", "artikel_id", artikel_id)){
-        return res.status(404).send({error: "Artikel not found"});
-    }
-
-    //cek pemilik artikel
-    var take = await artikel_model.getDataById(artikel_id);
-    var user_artikel = take[0].user_id;
-    if(user_artikel!=user_id){
-        return res.status(403).send({error: "Artikel isn't yours"});
-    }
-
-    //delete
-    if(await artikel_model.deleteData(artikel_id)){
-        return res.status(200).send({message : "Deleted"});
-    }else{
-        return res.status(500).send({error: "Something went wrong"});
-    }
-});
-
-router.get('/',middleware.checkAuthArtikelUser, async (req, res) => {
-    let user_id='';
-    if(req.body.user!='invalid'){
-        user_id=req.body.user.user_id;
-    }
-    else{
-        //user blm login atau token tidak sesuai 
-        return res.status(401).send({error: "Invalid Signature"});
-    }
-
-    //ambil artikel_id & user_id
-    let artikel_id_filter   = req.query.artikel_id;
-    let user_id_filter      = req.query.user_id;
-
-    if(!artikel_id_filter){
-        artikel_id_filter='';
-    }
-    if(!user_id_filter){
-        user_id_filter='';
-    }
-    const result = await artikel_model.getData(artikel_id_filter,user_id_filter);
     return res.status(200).send(result);
 });
 

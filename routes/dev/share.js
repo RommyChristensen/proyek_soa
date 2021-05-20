@@ -4,7 +4,7 @@ const { ifExists } = require("../../helpers/utils");
 const middleware = require('../../helpers/middlewares');
 const router = express.Router();
 
-router.post('/fb',middleware.checkApiKeyDev, async (req, res) => {
+router.post('/fb',middleware.checkApiKeyDevFB, async (req, res) => {
 
     const access_token = req.body.access_token;
     const app_id = req.body.app_id;
