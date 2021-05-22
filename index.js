@@ -19,6 +19,8 @@ const dev_share = require("./routes/dev/share");
 const dev_get_api_key = require("./routes/dev/apikey");
 const dev_plan = require("./routes/dev/plan");
 const dev_artikel = require("./routes/dev/artikel");
+const dev_comments = require("./routes/dev/comments");
+const dev_likes = require("./routes/dev/likes");
 
 const app = new express();
 
@@ -45,6 +47,8 @@ app.use("/api/dev/share", dev_share);
 app.use("/api/dev/apikey", dev_get_api_key);
 app.use("/api/dev/plan", dev_plan);
 app.use("/api/dev/artikel", dev_artikel);
+app.use("/api/dev/comments", dev_comments);
+app.use("/api/dev/likes", dev_likes);
 // -
 
 const port = process.env.PORT || 3000;

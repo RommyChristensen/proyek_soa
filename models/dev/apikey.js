@@ -7,7 +7,6 @@ const getDataById = async (subscribe_id) => {
     const api_key = subscribe[0].subscribe_api_key; 
     conn.release();
     return api_key;
-    
 }
 
 module.exports = { getDataById };
