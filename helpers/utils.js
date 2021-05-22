@@ -115,7 +115,7 @@ const checkApiKeyArtikel = async apiKey => {
 
 const checkApiKeyFB = async apiKey => {
     const conn = await getConnection();
-    const result = await executeQuery(conn, `SELECT u.*, s.subscribe_api_hit FROM subscribes s JOIN users u ON u.user_id = s.user_id WHERE 
+    const result = await executeQuery(conn, `SELECT u.*, s.subscribe_api_hit, s.plan_id FROM subscribes s JOIN users u ON u.user_id = s.user_id WHERE 
                             s.subscribe_api_key = '${apiKey}' AND 
                             s.subscribe_tanggal_pembayaran IS NOT NULL AND
                             (now() - interval 1 month)<=subscribe_tanggal_pembayaran
