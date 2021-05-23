@@ -5,7 +5,7 @@ const { ifExists } = require("../../helpers/utils");
 const middleware = require('../../helpers/middlewares');
 const router = express.Router();
 
-router.get('/',middleware.checkAuthUser, async (req, res) => {
+router.get('/',middleware.checkApiKeyDev, async (req, res) => {
     const user_id = req.body.user.user_id;
 
     if(! await ifExists("comments", "artikel_id", req.query.artikel_id)){
@@ -16,9 +16,10 @@ router.get('/',middleware.checkAuthUser, async (req, res) => {
     return res.status(200).send(result);
 });
 
-router.post('/:artikel_id',middleware.checkAuthUser , async (req, res) => {
+
+router.post('/:artikel_id',middleware.checkApiKeyDev , async (req, res) => {
     const artikel_id = req.params.artikel_id;
-    const user_id = req.body.user.user_id;
+    //const user_id = req.body.user.user_id;
     let hashtag_namas = req.body.hashtag_nama;
     let hashtag=[];
 
@@ -38,10 +39,9 @@ router.post('/:artikel_id',middleware.checkAuthUser , async (req, res) => {
             }
         }
     }
-    
+
     const data = {
         comment_isi : req.body.isi,
-        user_id : user_id,
         artikel_id : artikel_id,
         hashtag:hashtag
     };
@@ -55,7 +55,6 @@ router.post('/:artikel_id',middleware.checkAuthUser , async (req, res) => {
     if(comment_id!=null){
         let datareturn = {
             comment_id : comment_id,
-            user_id : user_id,
             comment_isi : req.body.isi
         };  
         return res.status(201).send(datareturn);
@@ -65,7 +64,7 @@ router.post('/:artikel_id',middleware.checkAuthUser , async (req, res) => {
 
 });
 
-router.delete('/:comment_id',middleware.checkAuthUser, async (req, res) => {
+router.delete('/:comment_id',middleware.checkApiKeyDev, async (req, res) => {
     // return res.status(200).send({message : "Deleted"});
     const comment_id = req.params.comment_id;
     const user_id = req.body.user.user_id;
@@ -73,7 +72,7 @@ router.delete('/:comment_id',middleware.checkAuthUser, async (req, res) => {
     if(!await ifExists("comments", "comment_id", comment_id)){
         return res.status(404).send({error: "Comment not found"});
     }
-    
+
     if(!await comments_model.cekUser(comment_id,user_id)){
         return res.status(404).send({error: "The owner of the comment is not a logged-in user"});
     }

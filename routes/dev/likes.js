@@ -4,10 +4,10 @@ const { ifExists } = require("../../helpers/utils");
 const middleware = require('../../helpers/middlewares');
 const router = express.Router();
 
-router.post('/:artikel_id',middleware.checkAuthUser , async (req, res) => {
+router.post('/:artikel_id',middleware.checkApiKeyDev , async (req, res) => {
     const artikel_id = req.params.artikel_id;
     const user_id = req.body.user.user_id;
-
+    
     if(!await ifExists("artikels", "artikel_id", artikel_id)){
         return res.status(400).send({error: "Artikel not found"});
     }
