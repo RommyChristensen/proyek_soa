@@ -328,4 +328,28 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkApiK
     return res.status(200).send(result);
 });
 
+router.get('/',middleware.checkApiKeyDevArtikel, async (req, res) => {
+    let user_id='';
+    if(req.body.user!='invalid'){
+        user_id=req.body.user.user_id;
+    }
+    else{
+        //user blm login atau token tidak sesuai 
+        return res.status(401).send({error: "Invalid Signature"});
+    }
+
+    //ambil artikel_id & user_id
+    let artikel_id_filter   = req.query.artikel_id;
+    let user_id_filter      = req.query.user_id;
+
+    if(!artikel_id_filter){
+        artikel_id_filter='';
+    }
+    if(!user_id_filter){
+        user_id_filter='';
+    }
+    const result = await artikel_model.getData(artikel_id_filter,user_id_filter);
+    return res.status(200).send(result);
+});
+
 module.exports = router;

@@ -48,7 +48,7 @@ app.use("/api/dev/apikey", dev_get_api_key);
 app.use("/api/dev/plan", dev_plan);
 app.use("/api/dev/artikel", dev_artikel);
 app.use("/api/dev/comments", dev_comments);
-app.use("/api/dev/likes", dev_likes);
+app.use("/api/dev/like", dev_likes);
 // -
 
 const port = process.env.PORT || 3000;

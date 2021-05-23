@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/',middleware.checkApiKeyDev, async (req, res) => {
     const user_id = req.body.user.user_id;
+    //return res.status(200).send(user_id);
 
     if(! await ifExists("comments", "artikel_id", req.query.artikel_id)){
         return res.status(404).send({error: "Artikel not found"});
@@ -16,13 +17,12 @@ router.get('/',middleware.checkApiKeyDev, async (req, res) => {
     return res.status(200).send(result);
 });
 
-
 router.post('/:artikel_id',middleware.checkApiKeyDev , async (req, res) => {
     const artikel_id = req.params.artikel_id;
-    //const user_id = req.body.user.user_id;
+    const user_id = req.body.user.user_id;
     let hashtag_namas = req.body.hashtag_nama;
     let hashtag=[];
-
+    
     if(hashtag_namas){
         for(let i=0;i<hashtag_namas.length;i++){
             if(await ifExists("hashtags", "hashtag_nama", hashtag_namas[i])){ //uda ada
@@ -43,6 +43,7 @@ router.post('/:artikel_id',middleware.checkApiKeyDev , async (req, res) => {
     const data = {
         comment_isi : req.body.isi,
         artikel_id : artikel_id,
+        user_id : user_id,
         hashtag:hashtag
     };
     
@@ -54,6 +55,7 @@ router.post('/:artikel_id',middleware.checkApiKeyDev , async (req, res) => {
 
     if(comment_id!=null){
         let datareturn = {
+            user_id : user_id,
             comment_id : comment_id,
             comment_isi : req.body.isi
         };  
