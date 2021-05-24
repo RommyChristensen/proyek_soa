@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:kategori_id', async (req, res) => {
-    if(! await ifExists("kategoris", "kategori_id", kategori_id)){
+    if(! await ifExists("kategoris", "kategori_id", req.params.kategori_id)){
         return res.status(404).send({error: "Kategori not found"});
     }
 
@@ -27,9 +27,15 @@ router.post('/', async (req, res) => {
         return res.status(500).send({error: "Duplicate names"});
     }
 
-    if(await kategori_model.insertData(data)){
-        return res.status(201).send(data);
-    }else{
+    var kategori_id = await kategori_model.insertData(data);
+    if(kategori_id!=false){
+        var datareturn={
+            "kategori_id":kategori_id,
+            "kategori_nama":nama
+        }
+        return res.status(201).send(datareturn);
+    }
+    else{
         return res.status(500).send({error: "Something went wrong"});
     }
 });

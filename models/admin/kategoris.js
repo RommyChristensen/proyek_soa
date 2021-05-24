@@ -9,7 +9,7 @@ const insertData = async (data) => {
     try{
         await executeQuery(conn, `INSERT INTO kategoris VALUES('${kategori_id}', '${kategori_nama}')`);
         conn.release();
-        return true;
+        return kategori_id;
     }catch(ex){
         conn.release();
         return false;

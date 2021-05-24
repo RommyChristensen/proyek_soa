@@ -349,12 +349,16 @@ router.delete('/:artikel_id',middleware.checkAuthArtikelUser, async (req, res) =
 
 router.get('/',middleware.checkAuthArtikelUser, async (req, res) => {
     let user_id='';
-    if(req.body.user!='invalid'){
+    if(!(req.body.user=='invalid' || req.body.user=='unauthorized')){
         user_id=req.body.user.user_id;
     }
     else{
-        //user blm login atau token tidak sesuai 
-        return res.status(401).send({error: "Invalid Signature"});
+        if(req.body.user=='unauthorized'){
+            return res.status(401).send({error: "Unauthorized User"});
+        }
+        else if(req.body.user=='invalid'){
+            return res.status(401).send({error: "Invalid Signature"});
+        }
     }
 
     //ambil artikel_id & user_id

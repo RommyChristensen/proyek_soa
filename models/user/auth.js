@@ -46,7 +46,7 @@ const checkUsernamePassword = async (data) => {
     }
 }
 
-const updateProfile = async (username, data) => {
+const updateProfile = async (user_id, data) => {
     const conn = await getConnection();
     let set = "SET ";
     let selectField = "";
@@ -56,14 +56,18 @@ const updateProfile = async (username, data) => {
             set += ", ";
             selectField += ", ";
         }
-        set += key + " = '" + value + "'";
+        if(key=="user_tanggal_lahir"){
+            set += key + " = " + "STR_TO_DATE('"+value+"', '%d/%m/%Y')";
+        }
+        else{
+            set += key + " = '" + value + "'";
+        }
         selectField += key;
         i++;
     }
-    
     try{
-        let user_lama = await executeQuery(conn, `SELECT ${selectField} FROM users WHERE user_username = '${username}'`);
-        await executeQuery(conn, `UPDATE users ${set} WHERE user_username = '${username}'`);
+        let user_lama = await executeQuery(conn, `SELECT ${selectField} FROM users WHERE user_id = '${user_id}'`);
+        await executeQuery(conn, `UPDATE users ${set} WHERE user_id = '${user_id}'`);
 
         let returnData = {};
         for (const [key, value] of Object.entries(user_lama[0])) {

@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
     });
 })
 
-router.put('/profile/:username', middlewares.checkAuthUser, async (req, res) => {
+router.put('/profile', middlewares.checkAuthUser, async (req, res) => {
     const {user} = req.body;
 
     // nama, username
@@ -64,7 +64,7 @@ router.put('/profile/:username', middlewares.checkAuthUser, async (req, res) => 
         }
     }
 
-    let result = await auth_model.updateProfile(user.user_username, data);
+    let result = await auth_model.updateProfile(user.user_id, data);
 
     if(!result){
         return res.status(400).send({error: "Ada yang salah"});
