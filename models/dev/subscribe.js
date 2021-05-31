@@ -30,7 +30,7 @@ const insertData = async (user_id, plan_id) => {
         const plan_harga = await executeQuery(conn, `SELECT plan_harga FROM plans WHERE plan_id = '${plan_id}'`);
         const result = await executeQuery(conn, `INSERT INTO subscribes VALUES('${subscribe_id}', '${user_id}', '${plan_id}', NULL, NULL, ${plan_api_hit[0].plan_api_hit}, ${plan_harga[0].plan_harga}, NULL, NULL)`);
         conn.release();
-        return result;
+        return subscribe_id;
     }catch(ex){
         conn.release();
         return false;

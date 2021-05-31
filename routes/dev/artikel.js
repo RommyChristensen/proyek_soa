@@ -352,4 +352,39 @@ router.get('/',middleware.checkApiKeyDevArtikel, async (req, res) => {
     return res.status(200).send(result);
 });
 
+router.delete('/:artikel_id', middleware.checkApiKeyDevArtikel, async (req, res) => {
+    let artikel_id=req.params.artikel_id;
+    let user_id='';
+    if(!(req.body.user=='invalid' || req.body.user=='unauthorized')){
+        user_id=req.body.user.user_id;
+    }
+    else{
+        if(req.body.user=='unauthorized'){
+            return res.status(401).send({error: "Unauthorized User"});
+        }
+        else if(req.body.user=='invalid'){
+            return res.status(401).send({error: "Invalid Signature"});
+        }
+    }
+
+    //cek artikel ada ga
+    if(!await ifExists("artikels", "artikel_id", artikel_id)){
+        return res.status(404).send({error: "Artikel not found"});
+    }
+
+    //cek pemilik artikel
+    var take = await artikel_model.getDataById(artikel_id);
+    var user_artikel = take[0].user_id;
+    if(user_artikel!=user_id){
+        return res.status(403).send({error: "Artikel isn't yours"});
+    }
+
+    //delete
+    if(await artikel_model.deleteData(artikel_id)){
+        return res.status(200).send({message : "Deleted"});
+    }else{
+        return res.status(500).send({error: "Something went wrong"});
+    }
+});
+
 module.exports = router;

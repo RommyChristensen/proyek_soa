@@ -17,7 +17,10 @@ router.post('/', middleware.checkAuthUser, async(req, res) => {
 
     let result = await subscribe_model.insertData(user.user_id, plan_id);
     if(!result) return res.status(400).send({error: "Ada yang salah"});
-    return res.status(200).send(result);
+    return res.status(200).send({
+        subscribe_id: result,
+        status: 'waiting for payment'
+    });
 });
 
 module.exports = router;
