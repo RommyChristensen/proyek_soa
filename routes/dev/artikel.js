@@ -330,14 +330,24 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkApiK
 
 router.get('/',middleware.checkApiKeyDevArtikel, async (req, res) => {
     let user_id='';
-    if(req.body.user!='invalid'){
+    if(!(req.body.user=='invalid' || req.body.user=='unauthorized' || req.body.user=='notfound' || req.body.user=='notenough')){
         user_id=req.body.user.user_id;
     }
     else{
         //user blm login atau token tidak sesuai 
-        return res.status(401).send({error: "Invalid Signature"});
+        if(req.body.user=='unauthorized'){
+            return res.status(401).send({error: "Unauthorized User"});
+        }
+        else if(req.body.user=='invalid'){
+            return res.status(401).send({error: "Invalid Signature"});
+        }
+        if(req.body.user=='notfound'){
+            return res.status(404).send({error: "API KEY Not Found"});
+        }
+        else if(req.body.user=='notenough'){
+            return res.status(400).send({error: "Your API Hit is empty"});
+        }
     }
-
     //ambil artikel_id & user_id
     let artikel_id_filter   = req.query.artikel_id;
     let user_id_filter      = req.query.user_id;
@@ -355,15 +365,22 @@ router.get('/',middleware.checkApiKeyDevArtikel, async (req, res) => {
 router.delete('/:artikel_id', middleware.checkApiKeyDevArtikel, async (req, res) => {
     let artikel_id=req.params.artikel_id;
     let user_id='';
-    if(!(req.body.user=='invalid' || req.body.user=='unauthorized')){
+    if(!(req.body.user=='invalid' || req.body.user=='unauthorized' || req.body.user=='notfound' || req.body.user=='notenough')){
         user_id=req.body.user.user_id;
     }
     else{
+        //user blm login atau token tidak sesuai 
         if(req.body.user=='unauthorized'){
             return res.status(401).send({error: "Unauthorized User"});
         }
         else if(req.body.user=='invalid'){
             return res.status(401).send({error: "Invalid Signature"});
+        }
+        if(req.body.user=='notfound'){
+            return res.status(404).send({error: "API KEY Not Found"});
+        }
+        else if(req.body.user=='notenough'){
+            return res.status(400).send({error: "Your API Hit is empty"});
         }
     }
 

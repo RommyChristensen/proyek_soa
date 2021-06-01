@@ -12,8 +12,8 @@ const shareFacebook = async (access_token,app_id,artikel_id) => {
     try{
 
         const hasil = await axios.post(`https://graph.facebook.com/v2.8/${app_id}/feed?access_token=${access_token}&message=
-        Judul : ${artikel_judul}
-        Isi : ${artikel_isi}`);
+Judul : ${artikel_judul}
+Isi : ${artikel_isi}`);
         return artikel_id;
         // const postTextOptions = {
         //     method: 'POST',
