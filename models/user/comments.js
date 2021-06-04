@@ -18,7 +18,6 @@ const getDataById = async (artikel_id) => {
             hashtag:arr_hashtag
         });
     }
-
     conn.release();
     return result;
 }
@@ -81,9 +80,11 @@ const deleteData = async (comment_id) => {
     var beforeDelete = getDataByIdComment(comment_id);
     const conn = await getConnection();
     const result = await executeQuery(conn, `DELETE FROM comments WHERE comment_id = '${comment_id}'`);
+    const result1 = await executeQuery(conn, `DELETE FROM hashtag_comment WHERE comment_id = '${comment_id}'`);
     conn.release();
     return beforeDelete;
 }
+
 
 const cekUser = async (comment_id,user_id) => {
     const conn = await getConnection();

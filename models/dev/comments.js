@@ -80,6 +80,7 @@ const deleteData = async (comment_id) => {
     var hasilDelete = getDataByIdComment(comment_id);
     const conn = await getConnection();
     const result = await executeQuery(conn, `DELETE FROM comments WHERE comment_id = '${comment_id}'`);
+    const result1 = await executeQuery(conn, `DELETE FROM hashtag_comment WHERE comment_id = '${comment_id}'`);
     conn.release();
     return hasilDelete;
 }
