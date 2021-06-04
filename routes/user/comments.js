@@ -78,8 +78,9 @@ router.delete('/:comment_id',middleware.checkAuthUser, async (req, res) => {
         return res.status(404).send({error: "The owner of the comment is not a logged-in user"});
     }
 
-    if(await comments_model.deleteData(comment_id)){
-        return res.status(200).send({message : "Deleted"});
+    var hasilDelete = await comments_model.deleteData(comment_id);
+    if(hasilDelete){
+        return res.status(200).send(hasilDelete[0]);
     }else{
         return res.status(500).send({error: "Something went wrong"});
     }

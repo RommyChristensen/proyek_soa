@@ -34,17 +34,17 @@ const updateData = async (kategori_id, kategori_nama) => {
     const conn = await getConnection();
     const data_select = await executeQuery(conn, `SELECT * FROM kategoris WHERE kategori_id = '${kategori_id}'`);
     await executeQuery(conn, `UPDATE kategoris SET kategori_nama = '${kategori_nama}' WHERE kategori_id = '${kategori_id}'`);
-    return {
-        kategori_nama_lama : data_select[0].kategori_nama,
-        kategori_nama_baru : kategori_nama
-    }
+    var hasilupdate = getDataById(kategori_id);
+    conn.release();
+    return hasilupdate;
 }
 
 const deleteData = async (kategori_id) => {
+    var beforeDelete = getDataById(kategori_id);
     const conn = await getConnection();
     const result = await executeQuery(conn, `DELETE FROM kategoris WHERE kategori_id = '${kategori_id}'`);
     conn.release();
-    return result;
+    return beforeDelete;
 }
 
 module.exports = { insertData, getData, getDataById, updateData, deleteData };

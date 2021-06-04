@@ -23,6 +23,29 @@ const getDataById = async (artikel_id) => {
     return result;
 }
 
+const getDataByIdComment = async (artikel_id) => {
+    const conn = await getConnection();
+    const comment = await executeQuery(conn, `SELECT * FROM comments WHERE comment_id = '${artikel_id}'`);
+    const result = [];
+
+    for(let i=0;i<comment.length;i++){
+        const arr_hashtag = [];
+        const listHashtag = await executeQuery(conn, `SELECT * FROM hashtag_comment WHERE comment_id = '${comment[i].comment_id}'`);
+        for(let i=0;i<listHashtag.length;i++){
+            const hashtag = await executeQuery(conn, `SELECT * FROM hashtags WHERE hashtag_id = '${listHashtag[i].hashtag_id}'`);
+            arr_hashtag.push(hashtag[0].hashtag_nama);
+        }
+
+        result.push({
+            detail:comment[i],
+            hashtag:arr_hashtag
+        });
+    }
+
+    conn.release();
+    return result;
+}
+
 const insertData = async (data) => {
     const comments_id = await generateId("comments", "comment_id", "C");
     const comments_isi = data.comment_isi;
@@ -55,10 +78,11 @@ const insertData = async (data) => {
 };
 
 const deleteData = async (comment_id) => {
+    var beforeDelete = getDataByIdComment(comment_id);
     const conn = await getConnection();
     const result = await executeQuery(conn, `DELETE FROM comments WHERE comment_id = '${comment_id}'`);
     conn.release();
-    return result;
+    return beforeDelete;
 }
 
 const cekUser = async (comment_id,user_id) => {

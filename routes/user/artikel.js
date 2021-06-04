@@ -313,7 +313,7 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkAuth
         return res.status(500).send({error: "Something went wrong"});
     }
 
-    return res.status(200).send(result);
+    return res.status(200).send(result[0]);
 });
 
 router.delete('/:artikel_id',middleware.checkAuthArtikelUser, async (req, res) => {
@@ -344,8 +344,9 @@ router.delete('/:artikel_id',middleware.checkAuthArtikelUser, async (req, res) =
     }
 
     //delete
-    if(await artikel_model.deleteData(artikel_id)){
-        return res.status(200).send({message : "Deleted"});
+    var hasilDelete = await artikel_model.deleteData(artikel_id);
+    if(hasilDelete){
+        return res.status(200).send(hasilDelete[0]);
     }else{
         return res.status(500).send({error: "Something went wrong"});
     }

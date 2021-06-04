@@ -35,18 +35,11 @@ const getDataById = async (plan_id) => {
 
 const updateData = async (plan_id, plan_deskripsi, plan_harga, plan_hit) => {
     const conn = await getConnection();
-    const data_select = await executeQuery(conn, `SELECT * FROM plans WHERE plan_id = '${plan_id}'`);
     await executeQuery(conn, `UPDATE plans SET plan_deskripsi = '${plan_deskripsi}', plan_harga = '${plan_harga}', plan_api_hit='${plan_hit}'
                             WHERE plan_id = '${plan_id}'`);
+    var datareturn = getDataById(plan_id);
     conn.release();
-    return {
-        plan_deskripsi_lama : data_select[0].plan_deskripsi,
-        plan_deskripsi_baru : plan_deskripsi,
-        plan_harga_lama : data_select[0].plan_harga,
-        plan_harga_baru : plan_harga,
-        plan_api_hit_lama : data_select[0].plan_api_hit,
-        plan_api_hit_baru : plan_hit
-    }
+    return datareturn;
 }
 
 const getSubscriber = async () => {

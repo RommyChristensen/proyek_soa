@@ -62,7 +62,6 @@ const getData = async () => {
 }
 const getDataById = async (artikel_id) => {
     const conn = await getConnection();
-    let returnvalue=[];
     let result = await executeQuery(conn, `SELECT * FROM artikels WHERE artikel_id like '%${artikel_id}%'`);
     for(let i=0;i<result.length;i++){
         let artikel_id_chosen = result[i].artikel_id;
@@ -115,9 +114,8 @@ const getDataById = async (artikel_id) => {
             comments:comments,
             liked_by:liked_by
         };
-        returnvalue.push(perartikel);
     }
     conn.release();
-    return returnvalue;
+    return perartikel;
 }
 module.exports = {getData,getDataById};

@@ -2,13 +2,14 @@ const express = require("express");
 const kategori_model = require('../../models/admin/kategoris');
 const { ifExists } = require("../../helpers/utils");
 const router = express.Router();
+const middleware = require('../../helpers/middlewares');
 
-router.get('/', async (req, res) => {
+router.get('/',middleware.checkAuthAdmin, async (req, res) => {
     const result = await kategori_model.getData();
     return res.status(200).send(result);
 });
 
-router.get('/:kategori_id', async (req, res) => {
+router.get('/:kategori_id',middleware.checkAuthAdmin, async (req, res) => {
     if(! await ifExists("kategoris", "kategori_id", req.params.kategori_id)){
         return res.status(404).send({error: "Kategori not found"});
     }
@@ -17,7 +18,7 @@ router.get('/:kategori_id', async (req, res) => {
     return res.status(200).send(result[0]);
 });
 
-router.post('/', async (req, res) => {
+router.post('/',middleware.checkAuthAdmin, async (req, res) => {
     const { nama } = req.body;
     const data = {
         kategori_nama : nama
@@ -40,7 +41,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:kategori_id', async (req, res) => {
+router.put('/:kategori_id',middleware.checkAuthAdmin, async (req, res) => {
     const { kategori_id } = req.params;
     const { nama } = req.body;
     if(! await ifExists("kategoris", "kategori_id", kategori_id)){
@@ -52,10 +53,10 @@ router.put('/:kategori_id', async (req, res) => {
     }
 
     const result = await kategori_model.updateData(kategori_id, nama);
-    return res.status(200).send(result);
+    return res.status(200).send(result[0]);
 });
 
-router.delete('/:kategori_id', async (req, res) => {
+router.delete('/:kategori_id',middleware.checkAuthAdmin, async (req, res) => {
     const { kategori_id } = req.params;
     if(! await ifExists("kategoris", "kategori_id", kategori_id)){
         return res.status(404).send({error: "Kategori not found"});
@@ -65,8 +66,9 @@ router.delete('/:kategori_id', async (req, res) => {
         return res.status(500).send({error: "Kategori used by some articles"});
     }
 
-    if(await kategori_model.deleteData(kategori_id)){
-        return res.status(200).send({message : "Deleted"});
+    const result = await kategori_model.deleteData(kategori_id);
+    if(result){
+        return res.status(200).send(result[0]);
     }else{
         return res.status(500).send({error: "Something went wrong"});
     }

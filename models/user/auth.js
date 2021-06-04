@@ -45,7 +45,33 @@ const checkUsernamePassword = async (data) => {
         return false;
     }
 }
-
+const getDataById = async (user_id) => {
+    const conn = await getConnection();
+    const resuser = await executeQuery(conn, `SELECT * FROM users where user_id='${user_id}'`);
+    const ressubs = await executeQuery(conn, `SELECT *, subscribe_tanggal_pembayaran + interval 1 month as masa_berlaku FROM subscribes where subscribe_tanggal_pembayaran 
+                                                IS NOT NULL and (now() - interval 1 month)<=subscribe_tanggal_pembayaran`);
+    var ambil;
+    for(let i=0;i<resuser.length;i++){
+        var user_id = resuser[i].user_id;
+        var user_nama = resuser[i].user_nama;
+        var user_username = resuser[i].user_username;
+        var user_email = resuser[i].user_email;
+        var user_tanggal_lahir = resuser[i].user_tanggal_lahir;
+        var tanggal = new Date(user_tanggal_lahir).getDate().toString();
+        var bulan = (new Date(user_tanggal_lahir).getMonth()+1).toString();
+        var tahun = new Date(user_tanggal_lahir).getFullYear().toString();
+        var rangkaitanggal = tanggal.padStart(2,'0')+"/"+bulan.padStart(2,'0')+"/"+tahun;
+        var ambil={
+            user_id:user_id,
+            user_username:user_username,
+            user_nama:user_nama,
+            user_email:user_email,
+            user_tanggal_lahir:rangkaitanggal
+        };
+    }
+    conn.release();
+    return ambil;
+}
 const updateProfile = async (user_id, data) => {
     const conn = await getConnection();
     let set = "SET ";
@@ -66,17 +92,9 @@ const updateProfile = async (user_id, data) => {
         i++;
     }
     try{
-        let user_lama = await executeQuery(conn, `SELECT ${selectField} FROM users WHERE user_id = '${user_id}'`);
         await executeQuery(conn, `UPDATE users ${set} WHERE user_id = '${user_id}'`);
 
-        let returnData = {};
-        for (const [key, value] of Object.entries(user_lama[0])) {
-            returnData[key + "_lama"] = value;
-        }
-
-        for (const [key, value] of Object.entries(data)) {
-            returnData[key + "_baru"] = value;
-        }
+        let returnData = getDataById(user_id);
         conn.release();
         return returnData;
     }catch(ex){

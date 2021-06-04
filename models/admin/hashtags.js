@@ -33,20 +33,18 @@ const getDataById = async (hashtag_id) => {
 
 const updateData = async (hashtag_id, hashtag_nama) => {
     const conn = await getConnection();
-    const data_select = await executeQuery(conn, `SELECT * FROM hashtags WHERE hashtag_id = '${hashtag_id}'`);
     await executeQuery(conn, `UPDATE hashtags SET hashtag_nama = '${hashtag_nama}' WHERE hashtag_id = '${hashtag_id}'`);
+    var hasilupdate = getDataById(hashtag_id);
     conn.release();
-    return {
-        hashtag_nama_lama : data_select[0].hashtag_nama,
-        hashtag_nama_baru : hashtag_nama
-    }
+    return hasilupdate;
 }
 
 const deleteData = async (hashtag_id) => {
+    var beforeDelete = getDataById(hashtag_id);
     const conn = await getConnection();
     const result = await executeQuery(conn, `DELETE FROM hashtags WHERE hashtag_id = '${hashtag_id}'`);
     conn.release();
-    return result;
+    return beforeDelete;
 }
 
 module.exports = { insertData, getData, getDataById, updateData, deleteData };

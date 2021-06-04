@@ -3,6 +3,17 @@ const { checkPlan } = require("../models/dev/subscribe");
 const { checkApiKey, checkApiKeyFB, checkApiKeyArtikel } = require("./utils");
 require('dotenv').config()
 
+const checkAuthAdmin = async (req, res, next) => {
+    if (!req.header("secretAdmin")) {
+        return res.status(401).send({ error: "Unauthorized User" });
+    }
+
+    var secretAdmin = req.header("secretAdmin");
+    if(secretAdmin!=process.env.secretAdmin){
+        return res.status(400).send({ error: "Invalid Signature" });
+    }
+    next();
+}
 const checkAuthUser = async (req, res, next) => {
     if (!req.header("X-AUTH-TOKEN")) {
         return res.status(401).send({ error: "Unauthorized User" });
@@ -105,6 +116,6 @@ const checkApiKeyDevArtikel = async (req, res, next) => {
     }
 }
 
-module.exports = { checkAuthUser, checkAuthArtikelUser, checkApiKeyDev, checkApiKeyDevFB, checkApiKeyDevArtikel };
+module.exports = { checkAuthAdmin,checkAuthUser, checkAuthArtikelUser, checkApiKeyDev, checkApiKeyDevFB, checkApiKeyDevArtikel };
 
 

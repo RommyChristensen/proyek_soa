@@ -325,7 +325,7 @@ router.put('/:artikel_id',uploadsupd.single('artikel_foto'),middleware.checkApiK
         return res.status(500).send({error: "Something went wrong"});
     }
 
-    return res.status(200).send(result);
+    return res.status(200).send(result[0]);
 });
 
 router.get('/',middleware.checkApiKeyDevArtikel, async (req, res) => {
@@ -396,9 +396,10 @@ router.delete('/:artikel_id', middleware.checkApiKeyDevArtikel, async (req, res)
         return res.status(403).send({error: "Artikel isn't yours"});
     }
 
+    var hasilDelete = await artikel_model.deleteData(artikel_id);
     //delete
-    if(await artikel_model.deleteData(artikel_id)){
-        return res.status(200).send({message : "Deleted"});
+    if(hasilDelete){
+        return res.status(200).send(hasilDelete[0]);
     }else{
         return res.status(500).send({error: "Something went wrong"});
     }

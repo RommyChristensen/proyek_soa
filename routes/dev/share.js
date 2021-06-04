@@ -15,7 +15,7 @@ router.post('/fb',middleware.checkApiKeyDevFB, async (req, res) => {
     }
 
     var result = await share_model.shareFacebook(access_token,app_id,artikel_id);
-    return res.status(200).send({message: "Success share fb"});
+    return res.status(200).send(result);
     
 });
 
