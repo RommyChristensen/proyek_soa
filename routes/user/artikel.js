@@ -94,6 +94,7 @@ router.post('/',uploads.single('artikel_foto'),middleware.checkAuthArtikelUser, 
     }
 
     let myfile = req.file;
+    console.log(myfile);
     let namafile =myfile.originalname.split(".");
     let ext = namafile[namafile.length - 1];
 

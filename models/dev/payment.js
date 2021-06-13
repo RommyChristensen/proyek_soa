@@ -55,7 +55,10 @@ const requestPaymentCC = async (card, subscribe_id) => {
     const conn = await getConnection();
     let result = await executeQuery(conn, `SELECT * FROM subscribes WHERE subscribe_id = '${subscribe_id}'`);
     if(result.length == 0){
-        return 404;
+        return {
+            code: 404,
+            msg: "Gagal"
+        }
     }
 
     const parameter = {

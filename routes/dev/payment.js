@@ -32,7 +32,7 @@ router.post('/cc', middleware.checkAuthUser, async (req, res) => {
     if(result.code == 200){
         return res.status(result.code).send(result);
     }
-
+    console.log(result);
     return res.status(result.code).send({error: result.msg});
 });
 

@@ -8,7 +8,6 @@ const shareFacebook = async (access_token,app_id,artikel_id) => {
     const artikel = await executeQuery(conn, `SELECT * FROM artikels WHERE artikel_id = '${artikel_id}'`);
     const artikel_judul = artikel[0].artikel_judul;
     const artikel_isi = artikel[0].artikel_isi;
-    conn.release();
 
     try{
 
@@ -19,6 +18,7 @@ Isi : ${artikel_isi}`);
             "Judul":artikel_judul,
             "Isi":artikel_isi
         }
+        conn.release();
         return hasilShare;
     
     }catch(ex){
